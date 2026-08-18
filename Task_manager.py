@@ -34,9 +34,7 @@ def ux (sub1, sub2, sub3, t):
             if user_choice in (sub1, sub2):
                 break
             else:
-                os.system("cls")
-                print(colored("Invalid Input", "red"))
-                time.sleep(1)
+                invalid()
         elif t == 2:
             user_choice = input(f"{sub1} . Return to menu\n{sub2} . Exit\n{sub3} . Clear\nEnter: ")
 
@@ -53,14 +51,12 @@ def ux (sub1, sub2, sub3, t):
                                 break
                             break
                         else:
-                            os.system("cls")
-                            print(colored("Invalid Input", "red"))
-                            time.sleep(1)
+                            invalid()
+                elif user_choice in ("2", "1"):
+                    break
                 break
             else:
-                os.system("cls")
-                print(colored("Invalid Input", "red"))
-                time.sleep(1)
+                invalid()
     return user_choice
 def sub_title(sub):
     os.system("cls")
@@ -93,9 +89,7 @@ def confirm_action(action_type, task_number):
         elif is_number == True and user_choice in ("2", "3"):
             break
         else:
-            os.system("cls")
-            print(colored("Invalid Input", "red"))
-            time.sleep(1)
+            invalid()
     return user_choice
 def task_action(title, action, confirm_type):
     user_choice = ""
@@ -111,16 +105,24 @@ def task_action(title, action, confirm_type):
 
         if is_number == True and 1 <= int(task_number)  <= count:
             user_choice = confirm_action(confirm_type, task_number)
-            break
+            if user_choice == "2":
+                pass
+            else:
+                break
         else:
-            os.system("cls")
-            print(colored("Invalid input", "red"))
-            time.sleep(1)
+            invalid()
+    return user_choice
+def invalid():
+    os.system("cls")
+    print(colored("Invalid Input", "red"))
+    time.sleep(1)
 
 while True:
     if user_choice in ("2", "3"):
         break
     while True:
+        if user_choice == "2":
+            break
         os.system("cls")
         choice = input("======================== << TASK   MANAGER >> ========================\n1 . Add Task\n2 . My Tasks\n3 . Mark as Done\n4 . Delete Task\n5 . Completed Tasks\n6 . Exit\n\nEnter: ")
 
@@ -136,9 +138,7 @@ while True:
         while True:
             task_text = input("Enter Task: ")
             if task_text.strip() == "":
-                os.system("cls")
-                print(colored("Invalid Input", "red"))
-                time.sleep(1)
+                invalid()
             else:
                 with open("tasks.txt", "a") as file:
                     file.write(f"{task_text}\n")
@@ -152,15 +152,17 @@ while True:
         print()
         user_choice = ux("1", "2", "3", 1)
     elif choice == "3":
-        task_action("MARK AS DONE", "complete", 1)
+        user_choice = task_action("MARK AS DONE", "complete", 1)
     elif choice == "4":
-        task_action("DELETE TASK", "delete", 2)
+        user_choice = task_action("DELETE TASK", "delete", 2)
     elif choice == "5":
-        sub_title(" COMPLETED TASK ")
-        with open("tasks_complete.txt", "a") as file:
-            file.write("")
-        show_task("tasks_complete.txt")
-        print()
-        user_choice = ux("1", "2", "3", 2)
+        user_choice = ""
+        while True:
+            if user_choice in  ("1", "2"):
+                break
+            sub_title(" COMPLETED TASK ")
+            show_task("tasks_complete.txt")
+            print()
+            user_choice = ux("1", "2", "3", 2)
     elif choice == "6":
         break
